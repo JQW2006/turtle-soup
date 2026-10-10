@@ -1,0 +1,822 @@
+[
+  {
+    "language": "zh",
+    "title": "海龟汤",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "经典",
+      "荒岛"
+    ],
+    "surface": "一个男人走进一家海边餐厅，点了一碗海龟汤。他只喝了一口，便放下勺子问服务员：“这真的是海龟汤吗？”服务员回答：“是的，先生。”男人结账回家后，自杀了。",
+    "bottom": "多年前，男人和妻子与几名同伴出海遇难，漂流到一座荒岛上，妻子在途中死去。岛上没有食物，同伴们偷偷用他妻子的肉煮成汤，骗他说那是“海龟汤”，让他活了下来。获救多年后，他在餐厅喝到了真正的海龟汤，发现味道完全不同，这才意识到当年喝的是妻子的肉。悲痛与罪恶感之下，他选择了自杀。",
+    "host_notes": "这是海龟汤游戏名字的由来。关于同伴的具体人数、荒岛位置，统一回答无关。",
+    "points": [
+      {
+        "id": "k1",
+        "text": "男人曾在海上遇难，被困荒岛",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k2",
+        "text": "他的妻子在遇难中死去",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "当年同伴给他喝的“海龟汤”其实是用妻子的肉做的",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k4",
+        "text": "餐厅里真正的海龟汤味道不同，让他明白了真相",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k5",
+        "text": "他无法承受真相而自杀",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "半根火柴",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "经典",
+      "沙漠"
+    ],
+    "surface": "沙漠中央躺着一具男尸，他手里紧紧攥着半根火柴。尸体周围没有任何脚印。",
+    "bottom": "男人和几个同伴乘热气球穿越沙漠，途中气球漏气、不断下降。他们扔光了所有行李仍无济于事，只能用抽火柴的方式决定谁跳下去减轻重量——抽到被折断的半根火柴的人跳。男人抽到了那半根，于是从热气球上跳下，摔死在沙漠里。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "他是从空中坠落而死的",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k2",
+        "text": "他当时乘坐着热气球",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "热气球不断下降，必须有人跳下去减重",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k4",
+        "text": "众人抽火柴决定谁跳，抽到半根的人必须跳",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k5",
+        "text": "因为从天而降，所以周围没有脚印",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "十楼的住户",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "经典",
+      "日常"
+    ],
+    "surface": "一个男人住在公寓的十楼。每天早上，他乘电梯直达一楼去上班；晚上回家时，他总是乘电梯到七楼，再走楼梯爬上十楼。但如果遇上下雨天，或者电梯里有别人，他就会直接坐到十楼。",
+    "bottom": "男人是个侏儒，个子太矮，伸手最高只能按到七楼的按钮。下雨天他带着雨伞，可以用伞尖去戳十楼的按钮；电梯里有别人时，他可以请别人帮忙按。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "男人个子非常矮小（侏儒）",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "他够不到十楼的按钮，最高只能按到七楼",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "下雨天他可以用雨伞按到十楼",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k4",
+        "text": "有别人在时可以请人代按",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "罗密欧与朱丽叶",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "经典",
+      "叙述诡计"
+    ],
+    "surface": "罗密欧和朱丽叶被发现死在卧室的地板上。地上有一滩水和一些碎玻璃，窗户开着。房间里没有任何人。",
+    "bottom": "罗密欧和朱丽叶是两条金鱼。大风吹开了窗户，把窗台上的鱼缸刮落摔碎在地上，它们离开了水，窒息而死。",
+    "host_notes": "如果玩家问到是否是猫打翻的鱼缸，回答“不是”，但可以加注“方向对了”。",
+    "points": [
+      {
+        "id": "k1",
+        "text": "罗密欧和朱丽叶不是人，而是金鱼",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "碎玻璃来自鱼缸，水是鱼缸里的水",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "风从开着的窗户吹进来，打翻了鱼缸",
+        "core": false,
+        "weight": 2
+      },
+      {
+        "id": "k4",
+        "text": "它们因为离开水而死",
+        "core": true,
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "一杯水",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "经典",
+      "日常"
+    ],
+    "surface": "一个男人走进酒吧，向酒保要一杯水。酒保没有倒水，反而从柜台下掏出一把枪指着他。男人愣了一下，说了声“谢谢”，转身离开了。",
+    "bottom": "男人一直在打嗝，想喝水止嗝。酒保看出他在打嗝，便掏出枪故意吓他。男人被吓了一跳，嗝一下子停了，不再需要水，于是道谢离开。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "男人在打嗝",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "他要水是为了止嗝",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "酒保用枪吓他是为了帮他止嗝",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k4",
+        "text": "嗝被吓好了，所以他道谢离开",
+        "core": true,
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "关灯",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "经典",
+      "海边"
+    ],
+    "surface": "一个男人关掉了灯，安心地睡着了。第二天早上醒来，他看了一眼窗外，然后自杀了。",
+    "bottom": "男人是一座灯塔的看守人。那天夜里他把灯塔的灯关掉去睡觉，没有灯光指引，一艘船在夜里触礁沉没，船上的人全部遇难。第二天早上，他看到了海面上漂浮的残骸和遗体，意识到这是自己造成的，在自责中自杀。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "他是灯塔看守人，关掉的是灯塔的灯",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "夜里因为没有灯光，一艘船触礁失事",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "早上他从窗户看到了海难的残骸",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k4",
+        "text": "他因为自责而自杀",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "夜路",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 1,
+    "tags": [
+      "经典",
+      "思维陷阱"
+    ],
+    "surface": "一个男人开车行驶在乡间小路上。他没有开车灯，天上没有月亮，路边也没有路灯。一个穿着一身黑衣的女人从路中间横穿过去，男人及时刹住了车。他是怎么看见她的？",
+    "bottom": "当时是大白天。汤面里从没说过这是晚上。",
+    "host_notes": "如果玩家问“是在晚上吗”，回答“不是”并标记为关键。",
+    "points": [
+      {
+        "id": "k1",
+        "text": "事情发生在白天",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "汤面并没有说是夜里，是读者自己的预设",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "深夜来电",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "经典",
+      "日常"
+    ],
+    "surface": "深夜，一个男人在酒店房间里辗转难眠。他拿起电话拨了一个号码，电话接通后，他一句话也没说就挂断了。随后，他很快就睡着了。",
+    "bottom": "隔壁房间的客人鼾声如雷，吵得他睡不着。他打电话到隔壁房间，铃声把打鼾的人吵醒，对方停止了打鼾。趁对方还没再次睡着，他终于安心入睡了。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "他睡不着是因为隔壁有人打鼾",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "他把电话打到了隔壁房间",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "电话铃声吵醒了打鼾的人，鼾声停止",
+        "core": true,
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "葬礼上的男人",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 4,
+    "tags": [
+      "经典",
+      "心理"
+    ],
+    "surface": "一个女孩在母亲的葬礼上遇到了一个陌生男人，对他一见钟情，却没来得及问到他的联系方式。几天后，女孩杀死了自己的姐姐。",
+    "bottom": "女孩认为那个男人是家里的亲友，只要家里再办一场葬礼，他很可能还会出现。为了再次见到他，她杀死了自己的姐姐。",
+    "host_notes": "这是一道著名的“心理测试”式海龟汤。关于男人的身份，统一回答无关。",
+    "points": [
+      {
+        "id": "k1",
+        "text": "她想再次见到那个男人",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "她认为家里办葬礼时那个男人会再次出现",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "她杀死姐姐是为了制造另一场葬礼",
+        "core": true,
+        "weight": 5
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "破产",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "经典",
+      "游戏"
+    ],
+    "surface": "一个男人推着他的车来到一家酒店门口，然后他就破产了。",
+    "bottom": "他在玩大富翁（地产类棋盘游戏）。他的棋子是一辆小汽车，走到了对手建了酒店的地块上，付不起高昂的过路费，于是破产出局。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "这是一场桌游（大富翁）",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "“车”是他的棋子",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "他停在对手建有酒店的地块，付不起租金而破产",
+        "core": true,
+        "weight": 4
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "不是双胞胎",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 1,
+    "tags": [
+      "经典",
+      "文字游戏"
+    ],
+    "surface": "两个男孩是同一个母亲在同年同月同日生下的，长得一模一样，但他们却不是双胞胎。",
+    "bottom": "他们是三胞胎中的两个，第三个孩子当时并不在场。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "他们是三胞胎（或多胞胎）中的两个",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "还有一个兄弟姐妹",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "没打开的包",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "经典",
+      "荒野"
+    ],
+    "surface": "一个男人死在荒野中，身边有一个没有打开的包。周围没有其他人的痕迹。",
+    "bottom": "他从飞机上跳伞，包里是降落伞，但降落伞没能打开，他坠地身亡。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "他是从高空坠落而死",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k2",
+        "text": "那个包是降落伞包",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k3",
+        "text": "降落伞没能打开",
+        "core": true,
+        "weight": 4
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "山上的小屋",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "经典",
+      "雪山"
+    ],
+    "surface": "人们在一座积雪的山顶上发现了一间“小木屋”，里面整齐地坐着好几具尸体，没有任何打斗痕迹，雪地上也没有通往小屋的脚印。",
+    "bottom": "所谓的“小木屋”其实是一架坠毁在山顶的飞机的机舱。机上的乘客在空难中遇难，仍坐在座位上；飞机是从空中坠落的，所以雪地上没有脚印。",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "“小木屋”其实是飞机的机舱",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "里面的人死于空难",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "他们整齐地坐着是因为还在座位上",
+        "core": false,
+        "weight": 2
+      },
+      {
+        "id": "k4",
+        "text": "飞机从天而降，所以没有脚印",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "zh",
+    "title": "楼下的妈妈",
+    "color": "red",
+    "genre": "henkaku",
+    "difficulty": 2,
+    "tags": [
+      "怪谈",
+      "变格"
+    ],
+    "surface": "小林在房间里写作业，听到楼下的妈妈喊他下楼吃饭。他刚要起身，躲在衣柜里的妈妈一把拉住了他，小声说：“别下去，我也听到了。”",
+    "bottom": "楼下喊他吃饭的并不是妈妈，而是一个会模仿人声的怪物。真正的妈妈早就察觉到不对劲，躲进了小林房间的衣柜，阻止他下楼。",
+    "host_notes": "本题为变格（含超自然设定）。怪物的具体来历回答无关。",
+    "points": [
+      {
+        "id": "k1",
+        "text": "楼下喊他的并不是真正的妈妈",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "那是一个会模仿人声的怪物",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "真正的妈妈察觉异常，躲在衣柜里阻止他下楼",
+        "core": true,
+        "weight": 4
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "Albatross Soup",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "classic",
+      "island"
+    ],
+    "surface": "A man walks into a seaside restaurant and orders albatross soup. He takes one sip, puts down his spoon and asks the waiter, \"Is this really albatross?\" The waiter says yes. The man pays, goes home, and kills himself.",
+    "bottom": "Years ago the man was shipwrecked with his wife and several others on a desert island. His wife died. With no food, the others secretly cooked her flesh and told him it was \"albatross soup\" so he would survive. Years after the rescue he tasted real albatross soup, realised it tasted nothing like what he had eaten, understood he had eaten his wife, and killed himself out of grief and guilt.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "He was once shipwrecked on an island",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k2",
+        "text": "His wife died there",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "The \"albatross soup\" he ate back then was made from his wife",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k4",
+        "text": "Real albatross soup tasted different, revealing the truth",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k5",
+        "text": "He killed himself because of the guilt",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "The Half Match",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "classic",
+      "desert"
+    ],
+    "surface": "A man lies dead in the middle of the desert, holding half a match in his hand. There are no footprints around the body.",
+    "bottom": "The man and several companions were crossing the desert in a hot-air balloon that was losing altitude. After throwing out all their luggage, they drew matches to decide who would jump to save the others; whoever drew the broken half-match had to jump. He drew it, jumped, and died in the fall.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "He fell to his death from the air",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k2",
+        "text": "He was in a hot-air balloon",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "The balloon was sinking and someone had to jump",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k4",
+        "text": "They drew matches; the half match meant he had to jump",
+        "core": true,
+        "weight": 5
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "The Tenth Floor",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "classic",
+      "everyday"
+    ],
+    "surface": "A man lives on the tenth floor. Every morning he takes the elevator down to the lobby. Every evening he takes the elevator to the seventh floor and walks up the remaining three — unless it is raining or someone else is in the elevator, in which case he rides all the way to ten.",
+    "bottom": "The man is very short and can only reach the button for the seventh floor. On rainy days he carries an umbrella and can press the tenth-floor button with it; when someone else is in the elevator, he can ask them to press it.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "The man is very short",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "He can only reach the seventh-floor button",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "He uses his umbrella to press the button on rainy days",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k4",
+        "text": "Other people can press it for him",
+        "core": false,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "Romeo and Juliet",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "classic",
+      "misdirection"
+    ],
+    "surface": "Romeo and Juliet are found dead on the bedroom floor. There is a puddle of water and some broken glass. The window is open. Nobody else is in the room.",
+    "bottom": "Romeo and Juliet are goldfish. A gust of wind through the open window knocked their bowl off the sill; it shattered and they suffocated out of water.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "Romeo and Juliet are fish, not people",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "The glass and water come from their fishbowl",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "They died because they were out of water",
+        "core": true,
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "A Glass of Water",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "classic",
+      "everyday"
+    ],
+    "surface": "A man walks into a bar and asks the bartender for a glass of water. The bartender pulls out a gun and points it at him. The man says \"Thank you\" and leaves.",
+    "bottom": "The man had hiccups and wanted water to stop them. The bartender noticed and scared him with the gun instead, which cured the hiccups, so the man thanked him and left.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "The man had hiccups",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "He wanted the water to cure them",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "The bartender used the gun to scare the hiccups away",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k4",
+        "text": "It worked, so he no longer needed water",
+        "core": true,
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "Lights Out",
+    "color": "red",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "classic",
+      "sea"
+    ],
+    "surface": "A man turns off the light and goes to sleep. The next morning he looks out of the window and kills himself.",
+    "bottom": "He was a lighthouse keeper. He switched off the lighthouse lamp; that night a ship, with no light to guide it, struck the rocks and everyone aboard died. In the morning he saw the wreckage and, overwhelmed with guilt, killed himself.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "He was a lighthouse keeper and turned off the lighthouse lamp",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "A ship crashed on the rocks in the dark",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "In the morning he saw the wreck",
+        "core": true,
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "Bankrupt",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 3,
+    "tags": [
+      "classic",
+      "games"
+    ],
+    "surface": "A man pushes his car up to a hotel and immediately goes bankrupt.",
+    "bottom": "He is playing Monopoly. His token is the car, it lands on a property with a hotel owned by another player, and he cannot pay the rent.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "It is a board game (Monopoly)",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "The car is his game token",
+        "core": true,
+        "weight": 3
+      },
+      {
+        "id": "k3",
+        "text": "He landed on an opponent's hotel and could not pay",
+        "core": true,
+        "weight": 4
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "title": "The Late Call",
+    "color": "clear",
+    "genre": "honkaku",
+    "difficulty": 2,
+    "tags": [
+      "classic",
+      "everyday"
+    ],
+    "surface": "Late at night a man lies awake in a hotel room. He picks up the phone and dials a number. When someone answers he hangs up without saying a word, and soon falls asleep.",
+    "bottom": "The guest in the next room was snoring loudly. The man called that room; the ringing woke the snorer, the snoring stopped, and the man fell asleep before it started again.",
+    "host_notes": "",
+    "points": [
+      {
+        "id": "k1",
+        "text": "He could not sleep because the neighbour was snoring",
+        "core": true,
+        "weight": 5
+      },
+      {
+        "id": "k2",
+        "text": "He called the room next door",
+        "core": true,
+        "weight": 4
+      },
+      {
+        "id": "k3",
+        "text": "The call woke the snorer and stopped the noise",
+        "core": true,
+        "weight": 3
+      }
+    ]
+  }
+]
