@@ -68,3 +68,18 @@ class Setting(Base):
 
     key: Mapped[str] = mapped_column(String(64), primary_key=True)
     value: Mapped[str] = mapped_column(Text)
+
+
+class Character(Base):
+    __tablename__ = "characters"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
+    kind: Mapped[str] = mapped_column(String(8))  # host | player
+    name: Mapped[str] = mapped_column(String(64))
+    intro: Mapped[str] = mapped_column(Text, default="")
+    prompt: Mapped[str] = mapped_column(Text, default="")
+    portrait: Mapped[str] = mapped_column(String(16), default="")  # '0'..'7' | 'detective'
+    color: Mapped[str] = mapped_column(String(7), default="")
+    model_id: Mapped[str] = mapped_column(String(32), default="")  # "" = default profile
+    builtin: Mapped[bool] = mapped_column(Integer, default=0)  # 0/1 (SQLite has no bool)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)

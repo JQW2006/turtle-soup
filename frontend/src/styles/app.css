@@ -1720,3 +1720,154 @@
 .verdict-btn .badge-outline {
   border: 0;
 }
+
+/* ---------- characters page ---------- */
+
+.char-section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 26px 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+.char-section-title:first-of-type {
+  margin-top: 14px;
+}
+.char-section-title .faint {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.char-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+.char-card .portrait {
+  flex: none;
+}
+.char-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.char-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.char-head h3 {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.char-intro {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.char-prompt {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-3);
+  font-family: var(--mono, monospace);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.char-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.portrait-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.portrait-picker .portrait-cell {
+  padding: 4px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+.portrait-picker .portrait-cell.active {
+  border-color: var(--accent);
+  background: var(--muted-soft, rgba(128, 128, 128, 0.15));
+}
+
+.profile-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  position: relative;
+}
+.profile-row .field {
+  margin: 0;
+}
+.profile-row-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+}
+
+/* character modal */
+
+.char-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+}
+.char-modal-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  min-width: 0;
+}
+.char-modal-title h2 {
+  margin: 0;
+}
+.char-readonly {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--surface-2, rgba(128, 128, 128, 0.12));
+  border: 1.5px dashed var(--border);
+  color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.char-readonly-prompt {
+  font-family: var(--mono, monospace);
+  font-size: 12.5px;
+}
+.char-prompt-input {
+  width: 100%;
+  line-height: 1.7;
+  resize: vertical;
+}

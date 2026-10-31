@@ -30,7 +30,7 @@ class FakeLLM:
         self.calls: list[str] = []
         self.player_turns = 0
 
-    async def json(self, system, user, *, effort="low", max_tokens=2048, temperature=0.7):
+    async def json(self, system, user, *, effort="low", max_tokens=2048, temperature=0.7, profile_id=None):
         if "拆解" in user or "Break the solution" in user:
             kind, data = "points", {"points": [{"text": "A", "core": True, "weight": 3}, {"text": "B", "core": False, "weight": 1}]}
         elif "审阅" in user or "Review the quality" in user:
@@ -49,6 +49,7 @@ class FakeLLM:
         else:
             raise AssertionError(f"unexpected prompt: {user[:200]}")
         self.calls.append(kind)
+        self.profiles = getattr(self, "profiles", []) + [profile_id]
         return LLMResult(data=data, usage={"prompt": 10, "completion": 5})
 
     def _player(self, user):
@@ -57,6 +58,14 @@ class FakeLLM:
         if final or self.player_turns > self.asks_before_guess:
             return "player", {"analysis": "a", "say": self.say, "action": "guess", "content": "the story"}
         return "player", {"analysis": "a", "say": self.say, "action": "ask", "content": f"q{self.player_turns}?"}
+
+@pytest.fixture(autouse=True)
+def _fresh_profiles_cache():
+    """The profiles resolver caches briefly; never let one test read another's profiles."""
+    llm_mod.invalidate_profiles_cache()
+    yield
+    llm_mod.invalidate_profiles_cache()
+
 
 @pytest.fixture
 def fake_llm():

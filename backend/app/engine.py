@@ -201,8 +201,10 @@ class GameRunner:
         t["completion"] += usage.get("completion", 0)
         t["calls"] += 1
 
-    async def _llm(self, system: str, user: str, effort: str, max_tokens: int = 16384, temperature: float = 0.7):
-        res = await get_llm().json(system, user, effort=effort, max_tokens=max_tokens, temperature=temperature)
+    async def _llm(self, system: str, user: str, effort: str, max_tokens: int = 16384, temperature: float = 0.7,
+                   profile_id: str | None = None):
+        res = await get_llm().json(system, user, effort=effort, max_tokens=max_tokens, temperature=temperature,
+                                   profile_id=profile_id or None)
         self._track(res.usage)
         return res
 
@@ -244,25 +246,37 @@ class GameRunner:
             return "（还没有任何提问）" if zh else "(no questions yet)"
         return "\n".join(lines)
 
+    def host_profile(self) -> str:
+        return self.config["host"].get("model_id") or ""
+
     def host_system(self) -> str:
         none = "（无）" if self.lang == "zh" else "(none)"
-        return P.HOST_SYSTEM[self.lang].format(
+        base = P.HOST_SYSTEM[self.lang].format(
             surface=self.puzzle["surface"],
             bottom=self.puzzle["bottom"],
             host_notes=self.puzzle.get("host_notes") or none,
             points=P.points_block(self.points, self.lang),
             extra_rules=self.rules.get("extra_rules") or none,
         )
+        style = P.localized(self.config["host"].get("host_style", ""), self.lang)
+        if style:
+            header = "\n\n【主持人风格】务必保持\n" if self.lang == "zh" else "\n\n[Host style — keep at all times]\n"
+            base += header + style
+        return base
 
     def player_system(self, p: dict) -> str:
         others = [o["name"] for o in self.players if o["id"] != p["id"]]
         zh = self.lang == "zh"
         extra = self.rules.get("extra_rules", "").strip()
         extra_line = (f"- 本局附加规则：{extra}\n" if zh else f"- Extra rules for this game: {extra}\n") if extra else ""
+        if p.get("character_prompt"):
+            persona = P.localized(p["character_prompt"], self.lang)
+        else:
+            persona = P.persona_text(p.get("persona", "logic"), p.get("custom_persona", ""), self.lang)
         return P.PLAYER_SYSTEM[self.lang].format(
             n_players=len(self.players),
             name=p["name"],
-            persona=P.persona_text(p.get("persona", "logic"), p.get("custom_persona", ""), self.lang),
+            persona=persona,
             teammates="、".join(others) if zh and others else (", ".join(others) if others else ("无" if zh else "none")),
             extra_rules=extra_line,
             surface=self.puzzle["surface"],
@@ -440,7 +454,8 @@ class GameRunner:
             name=p["name"],
         )
         self.set_activity(p["id"], "thinking")
-        res = await self._llm(self.player_system(p), user, p.get("effort", "low"), temperature=0.9)
+        res = await self._llm(self.player_system(p), user, p.get("effort", "low"), temperature=0.9,
+                              profile_id=p.get("model_id"))
         self.set_activity(None)
         d = res.data
         analysis = _clip(d.get("analysis"), 600)
@@ -484,7 +499,8 @@ class GameRunner:
             transcript=self.transcript(upto=q["seq"]), confirmed=confirmed,
             player=self.name_of(q["actor"]), question=q["data"]["text"],
         )
-        res = await self._llm(self.host_system(), user, self.config["host"].get("effort", "high"), temperature=0.2)
+        res = await self._llm(self.host_system(), user, self.config["host"].get("effort", "high"), temperature=0.2,
+                              profile_id=self.host_profile())
         d = res.data
         verdict = str(d.get("verdict", "")).strip().lower()
         if verdict not in VERDICTS:
@@ -540,7 +556,8 @@ class GameRunner:
         user = P.HOST_JUDGE[self.lang].format(
             transcript=self.transcript(upto=g["seq"]), player=self.name_of(g["actor"]), guess=g["data"]["text"]
         )
-        res = await self._llm(self.host_system(), user, self.config["host"].get("effort", "high"), temperature=0.2)
+        res = await self._llm(self.host_system(), user, self.config["host"].get("effort", "high"), temperature=0.2,
+                              profile_id=self.host_profile())
         d = res.data
         ids = {p["id"] for p in self.points}
         matched = [x for x in d.get("matched") or [] if x in ids]
@@ -597,7 +614,8 @@ class GameRunner:
             n=self.state["hints_used"] + 1,
             total=self.rules.get("max_hints", 0) or 1,
         )
-        res = await self._llm(self.host_system(), user, self.config["host"].get("effort", "high"), temperature=0.5)
+        res = await self._llm(self.host_system(), user, self.config["host"].get("effort", "high"), temperature=0.5,
+                              profile_id=self.host_profile())
         return _clip(res.data.get("hint"), 200)
 
     async def give_hint(self, source: str, requested_by: str | None = None, text: str = "") -> dict | None:

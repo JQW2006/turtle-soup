@@ -53,6 +53,10 @@ export interface PlayerConfig {
   custom_persona: string
   effort: Effort
   color: string
+  character_id?: string
+  portrait?: string
+  model_id?: string
+  character_prompt?: string
 }
 
 export interface Rules {
@@ -68,7 +72,7 @@ export interface Rules {
 
 export interface GameConfig {
   language: Lang
-  host: { kind: 'ai' | 'human'; effort: Effort }
+  host: { kind: 'ai' | 'human'; effort: Effort; character_id?: string; portrait?: string; model_id?: string; host_style?: string }
   players: PlayerConfig[]
   rules: Rules
 }
@@ -171,6 +175,19 @@ export interface GameSummary {
   finished_at: string | null
 }
 
+export interface ModelProfile {
+  id: string
+  label: string
+  api_key: string
+  base_url: string
+  model: string
+}
+
+export interface ModelProfileOut extends ModelProfile {
+  api_key_set: boolean
+  api_key_preview: string
+}
+
 export interface AppSettings {
   api_key_set: boolean
   api_key_preview: string
@@ -179,4 +196,42 @@ export interface AppSettings {
   model: string
   access_token_required: boolean
   locked: boolean
+  profiles: ModelProfileOut[]
+  default_profile: string
+  profiles_source: 'db' | 'env' | 'legacy'
+}
+
+export interface CharacterInput {
+  kind: 'host' | 'player'
+  name: string
+  intro: string
+  prompt: string
+  portrait: string
+  color: string
+  model_id: string
+}
+
+export interface Character extends CharacterInput {
+  id: string
+  builtin: boolean
+  created_at: string
+}
+
+/** Character fields may store plain text or a {"zh","en"} JSON blob (builtins do). */
+export function localized(value: string | undefined | null, lang: Lang): string {
+  if (!value) return ''
+  try {
+    const d = JSON.parse(value) as Record<string, string>
+    if (d && typeof d === 'object' && ('zh' in d || 'en' in d)) return d[lang] || d.zh || d.en || ''
+  } catch {
+    /* plain text */
+  }
+  return value
+}
+
+/** Character portrait field ('0'..'7' | 'detective') -> Portrait component index. */
+export function portraitIndex(portrait: string | undefined | null): number | 'host' {
+  if (portrait === 'detective') return 'host'
+  const n = Number(portrait)
+  return Number.isInteger(n) && n >= 0 && n <= 7 ? n : 0
 }

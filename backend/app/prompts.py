@@ -2,6 +2,21 @@
 
 from __future__ import annotations
 
+import json
+
+
+def localized(value: str, lang: str) -> str:
+    """Character fields store either plain text or a {"zh": ..., "en": ...} JSON blob."""
+    if not value:
+        return ""
+    try:
+        d = json.loads(value)
+    except json.JSONDecodeError:
+        return value
+    if isinstance(d, dict) and ("zh" in d or "en" in d):
+        return str(d.get(lang) or d.get("zh") or d.get("en") or "")
+    return value
+
 PERSONAS: dict[str, dict[str, str]] = {
     "logic": {
         "zh": "逻辑派：习惯先用二分法确定基本事实（人物身份、生死、时间地点、是否有他人参与），再逐步收窄范围，提问严谨、少走弯路。",

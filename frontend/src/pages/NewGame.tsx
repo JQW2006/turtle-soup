@@ -2,20 +2,23 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Bot, Loader2, Play, Plus, User, X } from 'lucide-react'
 import { api } from '../lib/api'
-import type { Effort, Lang, PlayerConfig, Puzzle, Rules } from '../lib/types'
+import type { Character, Effort, Lang, PlayerConfig, Puzzle, Rules } from '../lib/types'
+import { localized, portraitIndex } from '../lib/types'
 import { useI18n } from '../lib/i18n'
 import { useToast } from '../components/toast'
 import { Avatar, Difficulty, NumberField, Seg, Switch } from '../components/ui'
+import { Portrait } from '../components/ink'
 
 const COLORS = ['#2563eb', '#d97706', '#059669', '#db2777']
 const PERSONAS = ['logic', 'intuition', 'detail', 'skeptic', 'custom'] as const
+const BUILTIN_PERSONA_CHARS = ['builtin-logic', 'builtin-intuition', 'builtin-detail', 'builtin-skeptic']
 const NAMES: Record<Lang, string[]> = {
   zh: ['阿澈', '小满', '老周', '西西'],
   en: ['Alex', 'Mia', 'Sam', 'Ivy'],
 }
 
 export interface SetupState {
-  host: { kind: 'ai' | 'human'; effort: Effort }
+  host: { kind: 'ai' | 'human'; effort: Effort; character_id?: string }
   players: PlayerConfig[]
   rules: Rules
   delay: number
@@ -36,7 +39,7 @@ const DEFAULT_RULES: Rules = {
 
 function aiPlayer(i: number, lang: Lang, used: string[]): PlayerConfig {
   const name = NAMES[lang].find((n) => !used.includes(n)) ?? `${lang === 'zh' ? '玩家' : 'Player'} ${i + 1}`
-  return { id: '', name, kind: 'ai', persona: PERSONAS[i % 4], custom_persona: '', effort: 'off', color: COLORS[i % 4] }
+  return { id: '', name, kind: 'ai', persona: PERSONAS[i % 4], custom_persona: '', effort: 'off', color: COLORS[i % 4], character_id: BUILTIN_PERSONA_CHARS[i % 4], portrait: '', model_id: '' }
 }
 
 function defaults(lang: Lang): SetupState {
@@ -67,6 +70,11 @@ export default function NewGame() {
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null)
   const [s, setS] = useState<SetupState | null>(null)
   const [starting, setStarting] = useState(false)
+  const [chars, setChars] = useState<Character[]>([])
+
+  useEffect(() => {
+    api.characters().then(setChars).catch(() => {})
+  }, [])
 
   useEffect(() => {
     api
@@ -111,7 +119,7 @@ export default function NewGame() {
     const p =
       kind === 'ai'
         ? aiPlayer(i, s.language, s.players.map((x) => x.name))
-        : { ...aiPlayer(i, s.language, []), kind: 'human' as const, name: t('setup.me'), persona: 'logic' }
+        : { ...aiPlayer(i, s.language, []), kind: 'human' as const, name: t('setup.me'), persona: 'logic', character_id: '', portrait: '', model_id: '' }
     p.color = COLORS.find((c) => !s.players.some((x) => x.color === c)) ?? COLORS[i % 4]
     setS({ ...s, players: [...s.players, p] })
   }
@@ -134,6 +142,16 @@ export default function NewGame() {
   }
 
   const effortOptions = (['off', 'low', 'high', 'max'] as Effort[]).map((e) => ({ value: e, label: t(`effort.${e}`) }))
+
+  const playerChars = chars.filter((c) => c.kind === 'player')
+  const hostChars = chars.filter((c) => c.kind === 'host' && !c.builtin)
+  const charOf = (id?: string) => chars.find((c) => c.id === id)
+  const charSelectValue = (p: PlayerConfig) => {
+    if (p.character_id) return p.character_id
+    if (p.persona === 'custom') return '__adhoc__'
+    const idx = PERSONAS.indexOf(p.persona as (typeof PERSONAS)[number])
+    return idx >= 0 && idx < 4 ? BUILTIN_PERSONA_CHARS[idx] : '__adhoc__'
+  }
 
   return (
     <div className="page page-narrow">
@@ -180,6 +198,20 @@ export default function NewGame() {
               />
               {!hostHuman && (
                 <>
+                  <span className="label">{t('setup.character')}</span>
+                  <select
+                    className="select select-auto"
+                    value={s.host.character_id || ''}
+                    onChange={(e) => setS({ ...s, host: { ...s.host, character_id: e.target.value } })}
+                    aria-label={t('setup.character')}
+                  >
+                    <option value="">{t('setup.hostDefault')}</option>
+                    {hostChars.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {localized(c.name, s.language)}
+                      </option>
+                    ))}
+                  </select>
                   <span className="spacer" />
                   <span className="label">{t('setup.effort')}</span>
                   <select className="select select-auto" value={s.host.effort} onChange={(e) => setS({ ...s, host: { ...s.host, effort: e.target.value as Effort } })}>
@@ -213,9 +245,15 @@ export default function NewGame() {
             </button>
           </div>
           <div className="players-edit">
-            {s.players.map((p, i) => (
+            {s.players.map((p, i) => {
+              const ch = charOf(p.character_id)
+              return (
               <div key={i} className="player-row">
-                <Avatar name={p.name || '?'} index={i} size={52} />
+                {ch ? (
+                  <Portrait index={portraitIndex(ch.portrait)} size={52} className="avatar" title={p.name} />
+                ) : (
+                  <Avatar name={p.name || '?'} index={i} size={52} />
+                )}
                 <div className="player-fields">
                   <div className="row row-wrap">
                     <input className="input input-name" value={p.name} maxLength={24} onChange={(e) => setPlayer(i, { name: e.target.value })} />
@@ -226,12 +264,33 @@ export default function NewGame() {
                     {p.kind === 'ai' && (
                       <>
                         <span className="spacer" />
-                        <select className="select select-auto" value={p.persona} onChange={(e) => setPlayer(i, { persona: e.target.value })} aria-label={t('setup.persona')}>
-                          {PERSONAS.map((x) => (
-                            <option key={x} value={x}>
-                              {t(`persona.${x}`)}
-                            </option>
-                          ))}
+                        <select
+                          className="select select-auto"
+                          value={charSelectValue(p)}
+                          onChange={(e) => {
+                            const v = e.target.value
+                            if (v === '__adhoc__') setPlayer(i, { character_id: '', persona: 'custom' })
+                            else setPlayer(i, { character_id: v, persona: 'logic', custom_persona: '' })
+                          }}
+                          aria-label={t('setup.character')}
+                        >
+                          <optgroup label={t('characters.builtin')}>
+                            {playerChars.filter((c) => c.builtin).map((c) => (
+                              <option key={c.id} value={c.id}>
+                                {localized(c.name, s.language)}
+                              </option>
+                            ))}
+                          </optgroup>
+                          {playerChars.some((c) => !c.builtin) && (
+                            <optgroup label={t('characters.custom')}>
+                              {playerChars.filter((c) => !c.builtin).map((c) => (
+                                <option key={c.id} value={c.id}>
+                                  {localized(c.name, s.language)}
+                                </option>
+                              ))}
+                            </optgroup>
+                          )}
+                          <option value="__adhoc__">{t('setup.charAdhoc')}</option>
                         </select>
                         <select className="select select-auto" value={p.effort} onChange={(e) => setPlayer(i, { effort: e.target.value as Effort })} aria-label={t('setup.effort')}>
                           {effortOptions.map((o) => (
@@ -243,8 +302,10 @@ export default function NewGame() {
                       </>
                     )}
                   </div>
-                  {p.kind === 'ai' && p.persona !== 'custom' && <p className="small faint">{t(`persona.${p.persona}.d` as 'persona.logic.d')}</p>}
-                  {p.kind === 'ai' && p.persona === 'custom' && (
+                  {p.kind === 'ai' && ch && ch.intro && <p className="small faint">{localized(ch.intro, s.language)}</p>}
+                  {p.kind === 'ai' && ch && !ch.intro && ch.prompt && <p className="small faint">{localized(ch.prompt, s.language)}</p>}
+                  {p.kind === 'ai' && !ch && p.persona !== 'custom' && <p className="small faint">{t(`persona.${p.persona}.d` as 'persona.logic.d')}</p>}
+                  {p.kind === 'ai' && !ch && p.persona === 'custom' && (
                     <input className="input" value={p.custom_persona} placeholder={t('setup.customPersonaPh')} onChange={(e) => setPlayer(i, { custom_persona: e.target.value })} />
                   )}
                 </div>
@@ -252,7 +313,8 @@ export default function NewGame() {
                   <X />
                 </button>
               </div>
-            ))}
+              )
+            })}
           </div>
         </section>
 

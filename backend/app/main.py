@@ -11,8 +11,8 @@ from .config import get_settings
 from .db import init_db
 from .deps import require_token
 from .engine import pause_all_active, registry
-from .routers import games, puzzles, settings
-from .seed import seed_builtin
+from .routers import characters, games, puzzles, settings
+from .seed import seed_builtin, seed_characters
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -21,6 +21,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 async def lifespan(_: FastAPI):
     init_db()
     seed_builtin()
+    seed_characters()
     pause_all_active()
     yield
     await registry.shutdown()
@@ -37,7 +38,7 @@ def create_app() -> FastAPI:
     )
 
     api_deps = [Depends(require_token)]
-    for r in (puzzles.router, games.router, settings.router):
+    for r in (puzzles.router, games.router, settings.router, characters.router):
         app.include_router(r, prefix="/api", dependencies=api_deps)
 
     @app.get("/api/health")

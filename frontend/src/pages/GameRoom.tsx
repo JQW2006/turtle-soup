@@ -4,6 +4,7 @@ import { ArrowDown, Bot, Eye, EyeOff, Flag, Lightbulb, Loader2, Pause, Play, Ski
 import { api } from '../lib/api'
 import { useGame } from '../lib/useGame'
 import type { GameSnapshot, Verdict } from '../lib/types'
+import { portraitIndex } from '../lib/types'
 import { useI18n } from '../lib/i18n'
 import { useToast } from '../components/toast'
 import { Avatar, Confirm, Modal, Seg } from '../components/ui'
@@ -54,7 +55,7 @@ function Activity({ game }: { game: GameSnapshot }) {
       : t(`game.${a.kind}` as 'game.answering')
   return (
     <div className="activity">
-      <Avatar name={p?.name ?? t('game.host')} index={p ? idx : 'host'} size={34} />
+      <Avatar name={p?.name ?? t('game.host')} index={p?.portrait ? portraitIndex(p.portrait) : p ? idx : 'host'} size={34} />
       <span>{label}</span>
       <span className="typing">
         <i />
@@ -258,9 +259,9 @@ export default function GameRoom() {
             </li>
             {game.config.players.map((p, i) => (
               <li key={p.id} className={s.activity?.actor === p.id || turnActor === p.id ? 'active' : ''}>
-                <Avatar name={p.name} index={i} size={40} />
+                <Avatar name={p.name} index={p.portrait ? portraitIndex(p.portrait) : i} size={40} />
                 <span className="roster-name">{p.name}</span>
-                <span className="badge">{p.kind === 'human' ? <User /> : <Bot />}{p.kind === 'human' ? t('setup.kindHuman') : t(`persona.${p.persona}` as 'persona.logic')}</span>
+                <span className="badge">{p.kind === 'human' ? <User /> : <Bot />}{p.kind === 'human' ? t('setup.kindHuman') : p.model_id ? p.model_id : t(`persona.${p.persona}` as 'persona.logic')}</span>
               </li>
             ))}
           </ul>
