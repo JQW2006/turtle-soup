@@ -11,6 +11,7 @@ import PuzzleEditor from './pages/PuzzleEditor'
 import NewGame from './pages/NewGame'
 import GameRoom from './pages/GameRoom'
 import Games from './pages/Games'
+import Characters from './pages/Characters'
 import Settings from './pages/Settings'
 
 function TokenPrompt({ onDone }: { onDone: () => void }) {
@@ -78,6 +79,9 @@ export default function App() {
           <NavLink to="/games" className={() => (loc.pathname.startsWith('/games') ? 'active' : '')}>
             {t('nav.games')}
           </NavLink>
+          <NavLink to="/characters" className={() => (loc.pathname.startsWith('/characters') ? 'active' : '')}>
+            {t('nav.characters')}
+          </NavLink>
           <NavLink to="/settings">{t('nav.settings')}</NavLink>
         </nav>
         <div className="spacer" />
@@ -98,6 +102,7 @@ export default function App() {
           <Route path="/play/:puzzleId" element={<NewGame />} />
           <Route path="/games" element={<Games />} />
           <Route path="/games/:id" element={<GameRoomRoute />} />
+          <Route path="/characters" element={<Characters />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<div className="empty">{t('notfound')}</div>} />
         </Routes>

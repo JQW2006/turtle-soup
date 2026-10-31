@@ -17,6 +17,11 @@ class Settings(BaseSettings):
     deepseek_base_url: str = "https://api.deepseek.com"
     deepseek_model: str = "deepseek-flash"
 
+    # Multiple model profiles: JSON list of {id, label, api_key, base_url, model}.
+    # Profiles saved from the Settings UI (DB) replace these entirely once set.
+    model_profiles: str = ""
+    default_model: str = ""
+
     # Optional shared secret. When set, every /api request must carry it.
     app_access_token: str = ""
     # Make the Settings page read-only (recommended for public deployments without a token,

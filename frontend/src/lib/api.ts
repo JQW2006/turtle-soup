@@ -1,7 +1,10 @@
 import type {
   AppSettings,
+  Character,
+  CharacterInput,
   GameSnapshot,
   GameSummary,
+  ModelProfile,
   Point,
   Puzzle,
   PuzzleInput,
@@ -129,9 +132,25 @@ export const api = {
   exportGame: (id: string, format: 'md' | 'json') => download(`/games/${id}/export?format=${format}`),
 
   settings: () => request<AppSettings>('GET', '/settings'),
-  saveSettings: (body: { api_key?: string; base_url?: string; model?: string }) =>
-    request<AppSettings>('PUT', '/settings', body),
-  testConnection: () => request<{ ok: boolean; model: string }>('POST', '/settings/test'),
+  saveSettings: (body: {
+    api_key?: string
+    base_url?: string
+    model?: string
+    profiles?: ModelProfile[]
+    default_profile?: string
+  }) => request<AppSettings>('PUT', '/settings', body),
+  testConnection: (profile = '') =>
+    request<{ ok: boolean; model: string }>('POST', `/settings/test${profile ? `?profile=${encodeURIComponent(profile)}` : ''}`),
+
+  characters: (kind = '') =>
+    request<Character[]>('GET', `/characters${kind ? `?kind=${kind}` : ''}`),
+  character: (id: string) => request<Character>('GET', `/characters/${id}`),
+  createCharacter: (c: CharacterInput) => request<Character>('POST', '/characters', c),
+  updateCharacter: (id: string, c: CharacterInput) => request<Character>('PUT', `/characters/${id}`, c),
+  setCharacterModel: (id: string, model_id: string) =>
+    request<Character>('PATCH', `/characters/${id}/model`, { model_id }),
+  duplicateCharacter: (id: string) => request<Character>('POST', `/characters/${id}/duplicate`),
+  deleteCharacter: (id: string) => request<void>('DELETE', `/characters/${id}`),
 }
 
 export function streamUrl(id: string) {

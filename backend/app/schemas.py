@@ -67,11 +67,18 @@ class PlayerConfig(BaseModel):
     custom_persona: str = ""
     effort: Effort = "off"
     color: str = ""
+    character_id: str = ""  # character library reference; snapshot at game start
+    portrait: str = ""      # portrait id captured from the character at game start
+    model_id: str = ""      # model profile captured from the character at game start
 
 
 class HostConfig(BaseModel):
     kind: Literal["ai", "human"] = "ai"
     effort: Effort = "high"
+    character_id: str = ""
+    portrait: str = ""
+    model_id: str = ""
+    host_style: str = ""    # host character prompt snapshot (appended to HOST_SYSTEM)
 
 
 class Rules(BaseModel):
@@ -167,10 +174,25 @@ class OverrideIn(BaseModel):
 # ---------- settings ----------
 
 
+class ModelProfileIn(BaseModel):
+    id: str = Field(min_length=1, max_length=32, pattern=r"^[a-zA-Z0-9_-]+$")
+    label: str = Field(default="", max_length=64)
+    api_key: str = ""
+    base_url: str = "https://api.deepseek.com"
+    model: str = Field(min_length=1, max_length=128)
+
+
+class ModelProfileOut(ModelProfileIn):
+    api_key_set: bool = False
+    api_key_preview: str = ""
+
+
 class SettingsIn(BaseModel):
     api_key: str | None = None
     base_url: str | None = None
     model: str | None = None
+    profiles: list[ModelProfileIn] | None = None  # replaces all profiles when present
+    default_profile: str | None = None
 
 
 class SettingsOut(BaseModel):
@@ -181,3 +203,43 @@ class SettingsOut(BaseModel):
     model: str
     access_token_required: bool
     locked: bool = False
+    profiles: list[ModelProfileOut] = []
+    default_profile: str = ""
+    profiles_source: Literal["db", "env", "legacy"] = "legacy"
+
+
+# ---------- characters ----------
+
+
+class CharacterIn(BaseModel):
+    kind: Literal["host", "player"]
+    name: str = Field(min_length=1, max_length=64)
+    intro: str = Field(default="", max_length=500)
+    prompt: str = Field(default="", max_length=4000)
+    portrait: str = Field(default="", pattern=r"^([0-7]|detective)?$")
+    color: str = Field(default="", pattern=r"^#[0-9a-fA-F]{6}$|^$")
+    model_id: str = Field(default="", max_length=32)
+
+    @field_validator("name", "intro", "prompt")
+    @classmethod
+    def _strip(cls, v: str) -> str:
+        return v.strip()
+
+
+class CharacterModelIn(BaseModel):
+    model_id: str = Field(default="", max_length=32)
+
+
+class CharacterOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    kind: str
+    name: str
+    intro: str
+    prompt: str
+    portrait: str
+    color: str
+    model_id: str
+    builtin: bool
+    created_at: datetime

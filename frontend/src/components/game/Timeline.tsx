@@ -1,6 +1,7 @@
 import { memo, useEffect, useState, type ReactNode } from 'react'
 import { Check, ChevronRight, Lightbulb, PenLine, Star, X, AlertTriangle, RotateCw, Flag } from 'lucide-react'
 import type { GameEvent, GameSnapshot, Verdict } from '../../lib/types'
+import { portraitIndex } from '../../lib/types'
 import { useI18n } from '../../lib/i18n'
 import { Avatar, Menu } from '../ui'
 import { Narration } from '../ink'
@@ -88,12 +89,13 @@ function Beat({
   const p = game.config.players[idx]
   const name = p?.name ?? (actor === 'human' ? t('game.spectator') : actor)
   const side = idx % 2 === 1 ? 'right' : 'left'
+  const avatarIndex = p?.portrait ? portraitIndex(p.portrait) : idx >= 0 ? idx : undefined
   return (
     <div className={`beat beat-${side} beat-${kind} ${compact ? 'beat-cont' : ''}`} id={id}>
       <div className="beat-who">
         {!compact && (
           <>
-            <Avatar name={name} index={idx >= 0 ? idx : undefined} size={68} />
+            <Avatar name={name} index={avatarIndex} size={68} />
             <span className="beat-name" style={{ color: p?.color }}>
               {name}
             </span>

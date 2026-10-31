@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react'
-import { Loader2, PlugZap } from 'lucide-react'
+import { Loader2, PlugZap, Plus, Trash2 } from 'lucide-react'
 import { api, getToken, setToken } from '../lib/api'
-import type { AppSettings } from '../lib/types'
+import type { AppSettings, ModelProfile } from '../lib/types'
 import { useI18n } from '../lib/i18n'
 import { useTheme } from '../lib/theme'
 import { useToast } from '../components/toast'
 import { Seg } from '../components/ui'
 
-const MODELS = ['deepseek-flash', 'deepseek-v4-pro']
+interface ProfileRow extends ModelProfile {
+  key_set: boolean // a key already exists server-side for this id
+}
 
 export default function Settings() {
   const { t, lang, setLang } = useI18n()
   const { pref, setPref } = useTheme()
   const toast = useToast()
   const [cfg, setCfg] = useState<AppSettings | null>(null)
-  const [key, setKey] = useState('')
-  const [baseUrl, setBaseUrl] = useState('')
-  const [model, setModel] = useState('')
+  const [rows, setRows] = useState<ProfileRow[]>([])
+  const [defaultId, setDefaultId] = useState('')
   const [saving, setSaving] = useState(false)
-  const [testing, setTesting] = useState(false)
+  const [testingId, setTestingId] = useState('')
   const [token, setTokenState] = useState(getToken())
 
   const apply = (c: AppSettings) => {
     setCfg(c)
-    setBaseUrl(c.base_url)
-    setModel(c.model)
+    setRows(c.profiles.map((p) => ({ ...p, api_key: '', key_set: p.api_key_set })))
+    setDefaultId(c.default_profile)
   }
 
   useEffect(() => {
@@ -32,12 +33,31 @@ export default function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const save = async (body: { api_key?: string; base_url?: string; model?: string }) => {
+  const setRow = (i: number, patch: Partial<ProfileRow>) =>
+    setRows((rs) => rs.map((r, j) => (j === i ? { ...r, ...patch } : r)))
+
+  const addRow = () =>
+    setRows((rs) => [...rs, { id: `m${rs.length + 1}`, label: '', api_key: '', base_url: 'https://api.deepseek.com', model: 'deepseek-flash', key_set: false }])
+
+  const rowValid = (r: ProfileRow) => /^[a-zA-Z0-9_-]{1,32}$/.test(r.id) && r.model.trim() && (r.api_key.trim() || r.key_set)
+
+  const dirty = (() => {
+    if (!cfg) return false
+    if (rows.length !== cfg.profiles.length) return true
+    const byId = new Map(cfg.profiles.map((p) => [p.id, p]))
+    return (
+      rows.some((r) => {
+        const o = byId.get(r.id)
+        return !o || r.label !== o.label || r.model !== o.model || r.base_url !== o.base_url || !!r.api_key.trim()
+      }) || defaultId !== cfg.default_profile
+    )
+  })()
+
+  const resetToEnv = async () => {
     setSaving(true)
     try {
-      apply(await api.saveSettings(body))
-      setKey('')
-      toast.ok(t('common.saved'))
+      apply(await api.saveSettings({ profiles: [] }))
+      toast.ok(t('settings.resetProfilesOk'))
     } catch (e) {
       toast.error(e)
     } finally {
@@ -45,19 +65,34 @@ export default function Settings() {
     }
   }
 
-  const test = async () => {
-    setTesting(true)
+  const save = async () => {
+    setSaving(true)
     try {
-      const r = await api.testConnection()
+      apply(
+        await api.saveSettings({
+          profiles: rows.map(({ id, label, api_key, base_url, model }) => ({ id, label: label.trim(), api_key: api_key.trim(), base_url: base_url.trim(), model: model.trim() })),
+          default_profile: defaultId,
+        }),
+      )
+      toast.ok(t('settings.profilesSaved'))
+    } catch (e) {
+      toast.error(e)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const test = async (id: string) => {
+    setTestingId(id)
+    try {
+      const r = await api.testConnection(id)
       toast.ok(t('settings.testOk', { model: r.model }))
     } catch (e) {
       toast.error(e)
     } finally {
-      setTesting(false)
+      setTestingId('')
     }
   }
-
-  const dirty = cfg && (key.trim() || baseUrl !== cfg.base_url || model !== cfg.model)
 
   return (
     <div className="page page-narrow">
@@ -72,61 +107,76 @@ export default function Settings() {
         <section className="section">
           <div className="section-head">
             <div>
-              <h2>{t('settings.api')}</h2>
-              <p>{t('settings.apiHelp')}</p>
+              <h2>{t('settings.profiles')}</h2>
+              <p>
+                {t('settings.profilesHelp')}
+                {cfg && <span className="faint"> {t('settings.profilesFrom', { source: cfg.profiles_source })}</span>}
+              </p>
             </div>
           </div>
           {cfg?.locked ? (
             <div className="section-body stack">
               <p className="small muted">{t('settings.locked')}</p>
-              <p className="small mono faint">
-                {cfg.model} · {cfg.base_url}
-              </p>
+              {cfg.profiles.map((p) => (
+                <p key={p.id} className="small mono faint">
+                  {p.id === cfg.default_profile ? '★ ' : ''}
+                  {p.label} · {p.model} · {p.base_url}
+                </p>
+              ))}
             </div>
           ) : cfg ? (
             <div className="section-body stack">
-              <div className="field">
-                <label htmlFor="s-key">
-                  {t('settings.apiKey')}
-                  <span className="faint">
-                    {' · '}
-                    {cfg.api_key_set ? `${cfg.api_key_preview} · ` : ''}
-                    {t(`settings.keySource.${cfg.api_key_source}`)}
-                  </span>
-                </label>
-                <input id="s-key" className="input mono" type="password" autoComplete="off" value={key} placeholder={t('settings.apiKeyPh')} onChange={(e) => setKey(e.target.value)} />
-              </div>
-              <div className="grid-2">
-                <div className="field">
-                  <label htmlFor="s-url">{t('settings.baseUrl')}</label>
-                  <input id="s-url" className="input mono" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} />
+              {rows.map((r, i) => (
+                <div key={i} className="profile-row">
+                  <div className="profile-row-head">
+                    <label className="row" style={{ gap: 6, cursor: 'pointer' }}>
+                      <input type="radio" name="default-profile" checked={defaultId === r.id} onChange={() => setDefaultId(r.id)} />
+                      <strong>{r.label || r.id}</strong>
+                      {defaultId === r.id && <span className="badge">{t('settings.defaultBadge')}</span>}
+                    </label>
+                    <span className="spacer" />
+                    <button className="btn btn-sm" disabled={testingId === r.id || dirty || !rowValid(r)} onClick={() => test(r.id)} title={dirty ? t('common.save') : ''}>
+                      {testingId === r.id ? <Loader2 className="spin" /> : <PlugZap />}
+                      {t('settings.test')}
+                    </button>
+                    <button className="btn btn-ghost btn-icon btn-sm" disabled={rows.length <= 1} onClick={() => setRows((rs) => rs.filter((_, j) => j !== i))} aria-label={t('common.delete')}>
+                      <Trash2 />
+                    </button>
+                  </div>
+                  <div className="field">
+                    <label>{t('settings.profileId')}</label>
+                    <input className="input mono" value={r.id} onChange={(e) => setRow(i, { id: e.target.value })} />
+                  </div>
+                  <div className="field">
+                    <label>{t('settings.profileLabel')}</label>
+                    <input className="input" value={r.label} onChange={(e) => setRow(i, { label: e.target.value })} />
+                  </div>
+                  <div className="field">
+                    <label>{t('settings.profileModel')}</label>
+                    <input className="input mono" value={r.model} onChange={(e) => setRow(i, { model: e.target.value })} />
+                  </div>
+                  <div className="field">
+                    <label>{t('settings.profileBaseUrl')}</label>
+                    <input className="input mono" value={r.base_url} onChange={(e) => setRow(i, { base_url: e.target.value })} />
+                  </div>
+                  <div className="field">
+                    <label>{t('settings.profileKey')}</label>
+                    <input className="input mono" type="password" autoComplete="off" value={r.api_key} placeholder={r.key_set ? t('settings.profileKeyKeep') : 'sk-…'} onChange={(e) => setRow(i, { api_key: e.target.value })} />
+                  </div>
                 </div>
-                <div className="field">
-                  <label htmlFor="s-model">{t('settings.model')}</label>
-                  <input id="s-model" className="input mono" list="models" value={model} onChange={(e) => setModel(e.target.value)} />
-                  <datalist id="models">
-                    {MODELS.map((m) => (
-                      <option key={m} value={m} />
-                    ))}
-                  </datalist>
-                </div>
-              </div>
+              ))}
               <div className="row row-wrap">
-                <button className="btn" disabled={testing} onClick={test}>
-                  {testing ? <Loader2 className="spin" /> : <PlugZap />}
-                  {t('settings.test')}
+                <button className="btn" onClick={addRow}>
+                  <Plus />
+                  {t('settings.addProfile')}
                 </button>
-                {cfg.api_key_source === 'db' && (
-                  <button className="btn btn-ghost" disabled={saving} onClick={() => save({ api_key: '' })}>
-                    {t('settings.clearKey')}
+                {cfg.profiles_source === 'db' && (
+                  <button className="btn btn-ghost" disabled={saving || dirty} onClick={resetToEnv} title={t('settings.profilesHelp')}>
+                    {t('settings.resetProfiles')}
                   </button>
                 )}
                 <span className="spacer" />
-                <button
-                  className="btn btn-primary"
-                  disabled={!dirty || saving}
-                  onClick={() => save({ ...(key.trim() ? { api_key: key.trim() } : {}), base_url: baseUrl, model })}
-                >
+                <button className="btn btn-primary" disabled={!dirty || saving || !rows.every(rowValid) || !rows.some((r) => r.id === defaultId)} onClick={save}>
                   {saving && <Loader2 className="spin" />}
                   {t('common.save')}
                 </button>
@@ -134,7 +184,7 @@ export default function Settings() {
             </div>
           ) : (
             <div className="section-body">
-              <div className="skeleton" style={{ height: 120 }} />
+              <div className="skeleton" style={{ height: 160 }} />
             </div>
           )}
         </section>

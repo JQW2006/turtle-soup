@@ -11,7 +11,7 @@ from ..db import get_session
 from ..engine import PLAYER_COLORS, GameRunner, initial_state, registry
 from ..export import game_markdown
 from ..llm import LLMError
-from ..models import Game, Puzzle
+from ..models import Character, Game, Puzzle
 from ..schemas import (
     ControlIn,
     GameCreate,
@@ -51,14 +51,35 @@ async def create_game(body: GameCreate, db: Session = Depends(get_session)):
         d = p.model_dump()
         d["id"] = f"p{i + 1}"
         d["color"] = d["color"] or PLAYER_COLORS[i % len(PLAYER_COLORS)]
+        d["character_prompt"] = ""
+        ch = db.get(Character, p.character_id) if p.character_id else None
+        if ch and ch.kind == "player":
+            # Snapshot the character so later edits/deletes never affect a running game.
+            d["character_prompt"] = ch.prompt
+            d["portrait"] = ch.portrait
+            d["model_id"] = ch.model_id
+            d["color"] = ch.color or d["color"]
+        else:
+            d["character_id"] = ""
+            d["model_id"] = ""
         players.append(d)
-    if body.host.kind == "human" and all(p["kind"] == "human" for p in players):
+    host_cfg = body.host.model_dump()
+    host_ch = db.get(Character, body.host.character_id) if body.host.character_id else None
+    if host_ch and host_ch.kind == "host":
+        host_cfg["host_style"] = host_ch.prompt
+        host_cfg["portrait"] = host_ch.portrait
+        host_cfg["model_id"] = host_ch.model_id
+    else:
+        host_cfg["character_id"] = ""
+        host_cfg["model_id"] = ""
+        host_cfg["host_style"] = ""
+    if host_cfg["kind"] == "human" and all(p["kind"] == "human" for p in players):
         raise HTTPException(400, "a game needs at least one AI participant")
     snapshot = {
         "title": pz.title, "surface": pz.surface, "bottom": pz.bottom, "host_notes": pz.host_notes,
         "points": pz.points or [], "color": pz.color, "genre": pz.genre, "difficulty": pz.difficulty,
     }
-    config = {"language": lang, "host": body.host.model_dump(), "players": players, "rules": body.rules.model_dump()}
+    config = {"language": lang, "host": host_cfg, "players": players, "rules": body.rules.model_dump()}
     g = Game(puzzle_id=pz.id, puzzle=snapshot, config=config, state=initial_state(body.delay, body.start_paused))
     pz.play_count = (pz.play_count or 0) + 1
     db.add(g)
